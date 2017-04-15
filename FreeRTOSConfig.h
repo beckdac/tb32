@@ -104,14 +104,10 @@
 #define configGENERATE_RUN_TIME_STATS	1
 #define configUSE_STATS_FORMATTING_FUNCTIONS	1
 
-void vConfigureTimerForRunTimeStats(void);
-unsigned long vGetTimerForRunTimeStats(void);
 extern unsigned getRunTimeCounterValue(void);
 extern void configureTimerForRunTimeStats(void);
 #define portGET_RUN_TIME_COUNTER_VALUE()	1
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS	configureTimerForRunTimeStats
-//#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS vConfigureTimerForRunTimeStats
-//#define portGET_RUN_TIME_COUNTER_VALUE                 vGetTimerForRunTimeStats
 
 #define configUSE_TRACE_FACILITY	1
 
