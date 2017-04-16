@@ -11,7 +11,8 @@ LDSCRIPT	= stm32f103c8t6.ld
 # DEPS		= tb32.h
 # CLOBBER	+= 	# Any additional files to be removed with "make clobber"
 
-MYOPT	= -DDEBUG
+# Options specific for this application's build
+APPOPT	= -DDEBUG
 
 include ../../Makefile.incl
 include ../Makefile.rtos
