@@ -18,7 +18,7 @@
 // transmit queue for serial
 static QueueHandle_t usart_txq;
 
-#define MAX_WAIT_TICKS	2500
+#define MAX_WAIT_TICKS	500
 #define TX_QUEUE_SIZE	256
 #define BAUD			38400
 #ifdef DEBUG
@@ -43,10 +43,12 @@ void task_user_init(void) {
 void task_user(void *args) {
 	char ch;
 	char ps[MAX_STATS_BUF];
+	TickType_t then;
 
 	UNUSED(args);
 
 	usart_queue("online\n");
+	then = xTaskGetTickCount();
 
 	for (;;) {
 		// send next character from queue
@@ -54,11 +56,9 @@ void task_user(void *args) {
 			usart_send_blocking(USART1, ch);
 			taskYIELD();
 #ifdef DEBUG
-		} else if (uxQueueSpacesAvailable(usart_txq) >= MAX_STATS_BUF) {
-			unsigned int x = getRunTimeCounterValue();
-			UNUSED(x);
-			sprintf(ps, "counter value: %d\n", x);
-			usart_queue(ps);
+		} else if (uxQueueSpacesAvailable(usart_txq) >= MAX_STATS_BUF && \
+			ticks_elapsed(then, xTaskGetTickCount()) > 10000) {
+			then = xTaskGetTickCount();
 #if 0
 			vTaskList(ps);
 			usart_queue(ps);
@@ -67,21 +67,8 @@ void task_user(void *args) {
 			usart_queue(ps);
 #endif
 			gpio_toggle(GPIOC, GPIO13);
-#if 0
-			char s[24];
-			int i;
-			sprintf(s, "pslen=%d\n", strlen(ps));
-			usart_queue(s);
-			for (i = 0; s[i] != '\0'; ++i)
-				usart_send_blocking(USART1, s[i]);
-			for (i = 0; ps[i] != '\0'; ++i)
-				usart_send_blocking(USART1, ps[i]);
-#endif
 #endif
 		}
-#if 0
-		usart_send_blocking(USART1, '.');
-#endif
 	}
 }
 
@@ -98,8 +85,8 @@ unsigned getRunTimeCounterValue(void) {
 
 void configureTimerForRunTimeStats(void) {
 	rcc_periph_reset_pulse(RST_TIM3);
-	timer_set_prescaler(TIM3, 10);
-	timer_set_period(TIM3, 0xffff);
+	timer_set_prescaler(TIM3, 729999);
+	timer_set_period(TIM3, 0xffff);		
 	timer_enable_counter(TIM3);
 }
 #endif

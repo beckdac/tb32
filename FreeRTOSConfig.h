@@ -106,7 +106,7 @@
 
 extern unsigned getRunTimeCounterValue(void);
 extern void configureTimerForRunTimeStats(void);
-#define portGET_RUN_TIME_COUNTER_VALUE()	1
+#define portGET_RUN_TIME_COUNTER_VALUE	getRunTimeCounterValue
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS	configureTimerForRunTimeStats
 
 #define configUSE_TRACE_FACILITY	1
