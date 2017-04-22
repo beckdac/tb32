@@ -39,9 +39,6 @@ static void gpio_setup(void) {
 					GPIO_CNF_INPUT_FLOAT,GPIO_USART1_RX);
 	gpio_set_mode(GPIOA, GPIO_MODE_INPUT, \
 					GPIO_CNF_INPUT_FLOAT,GPIO12);
-
-	// timer7
-	rcc_periph_clock_enable(RCC_TIM3);
 }
 
 int main(void) {

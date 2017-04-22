@@ -68,6 +68,8 @@ void task_user(void *args) {
 #endif
 			gpio_toggle(GPIOC, GPIO13);
 #endif
+		} else {
+			taskYIELD();
 		}
 	}
 }
@@ -84,9 +86,13 @@ unsigned getRunTimeCounterValue(void) {
 }
 
 void configureTimerForRunTimeStats(void) {
+	rcc_periph_clock_enable(RCC_TIM3);
 	rcc_periph_reset_pulse(RST_TIM3);
-	timer_set_prescaler(TIM3, 729999);
-	timer_set_period(TIM3, 0xffff);		
+	timer_set_mode(TIM3, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
+	timer_set_prescaler(TIM3, ((rcc_apb1_frequency * 2) / 1000));
+	timer_disable_preload(TIM3);
+	timer_continuous_mode(TIM3);
+	timer_set_period(TIM2, 65535);
 	timer_enable_counter(TIM3);
 }
 #endif
